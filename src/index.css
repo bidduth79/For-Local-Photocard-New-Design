@@ -1,0 +1,180 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Hind Siliguri", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-bengali: "Hind Siliguri", sans-serif;
+  --font-galada: "Galada", cursive;
+  --font-mina: "Mina", sans-serif;
+  --font-baloo: "Baloo Da 2", sans-serif;
+  --font-tiro: "Tiro Bangla", serif;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 20px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(107, 114, 128, 0.8);
+}
+
+/* ReactQuill Custom Styles */
+.quill-editor-container .ql-toolbar {
+  border: none !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  background-color: #f9fafb;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+  padding: 8px !important;
+}
+
+.quill-editor-container .ql-toolbar.ql-snow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.quill-editor-container .ql-container {
+  border: none !important;
+  font-family: inherit !important;
+  font-size: 1rem !important;
+}
+
+.quill-editor-container .ql-editor {
+  min-height: 100px;
+  padding: 12px 16px !important;
+}
+
+/* Dark Mode ReactQuill */
+.quill-dark .ql-toolbar {
+  background-color: #1e293b !important;
+  border-bottom-color: #334155 !important;
+}
+
+.quill-dark .ql-toolbar .ql-stroke {
+  stroke: #cbd5e1 !important;
+}
+
+.quill-dark .ql-toolbar .ql-fill {
+  fill: #cbd5e1 !important;
+}
+
+.quill-dark .ql-toolbar .ql-picker {
+  color: #cbd5e1 !important;
+}
+
+.quill-dark .ql-toolbar button:hover .ql-stroke,
+.quill-dark .ql-toolbar .ql-picker-label:hover .ql-stroke {
+  stroke: #818cf8 !important;
+}
+
+.quill-dark .ql-toolbar button:hover .ql-fill,
+.quill-dark .ql-toolbar .ql-picker-label:hover .ql-fill {
+  fill: #818cf8 !important;
+}
+
+.quill-dark .ql-toolbar .ql-picker-options {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+/* Quill Content Rendering in Photocard */
+.quill-content p {
+  margin-bottom: 0.5em;
+}
+.quill-content p:last-child {
+  margin-bottom: 0;
+}
+.quill-content strong {
+  font-weight: bold;
+}
+.quill-content em {
+  font-style: italic;
+}
+.quill-content u {
+  text-decoration: underline;
+}
+.quill-content s {
+  text-decoration: line-through;
+}
+.quill-content .ql-align-center {
+  text-align: center;
+}
+.quill-content .ql-align-right {
+  text-align: right;
+}
+.quill-editor-container .ql-toolbar button.ql-customQuote {
+  width: 28px;
+  height: 24px;
+  padding: 0;
+}
+
+.quill-editor-container .ql-toolbar button.ql-customQuote::after {
+  content: "❝❞";
+  font-weight: bold;
+  font-size: 16px;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.quill-dark .ql-toolbar button.ql-customQuote::after {
+  color: #cbd5e1;
+}
+
+.quill-editor-container .ql-toolbar button.ql-customQuote:hover::after {
+  color: #818cf8;
+}
+
+.quill-editor-container .ql-picker-options {
+  z-index: 100 !important;
+}
+
+.quill-editor-container .ql-color-picker.ql-background .ql-picker-options,
+.quill-editor-container .ql-color-picker.ql-color .ql-picker-options {
+  right: 0;
+  left: auto;
+}
+
+.quill-content .ql-align-justify {
+  text-align: justify;
+}
+.quill-content blockquote {
+  border-left: 4px solid currentColor;
+  padding-left: 16px;
+  margin-left: 0;
+  margin-right: 0;
+  font-style: italic;
+  opacity: 0.9;
+}
+
+@keyframes movePattern {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100px); }
+}
+
+.animate-pattern {
+  animation: movePattern 10s linear infinite;
+}
+
+@keyframes moveBgPattern {
+  0% { background-position: 0 0; }
+  100% { background-position: calc(-1 * var(--pattern-size, 200px)) calc(-1 * var(--pattern-size, 200px)); }
+}
+
+.animate-bg-pattern {
+  animation: moveBgPattern 20s linear infinite;
+}

@@ -1,0 +1,85 @@
+7:export const useAppState = () => {
+78:  const lastExtractedImageRef = useRef("");
+137:  const photocardRef = useRef<HTMLDivElement>(null);
+138:  const quoteCardRef = useRef<HTMLDivElement>(null);
+139:  const fileInputRef = useRef<HTMLInputElement>(null);
+140:  const fileInputRef2 = useRef<HTMLInputElement>(null);
+141:  const logoInputRef = useRef<HTMLInputElement>(null);
+142:  const quoteImageInputRef = useRef<HTMLInputElement>(null);
+143:  const isSwitchingDesign = useRef(false);
+149:  const scrollToPanel = useCallback((panelId: string) => {
+161:      const element = document.getElementById(panelId);
+164:        const container = element.closest('.custom-scrollbar') || window;
+167:        const elementRect = element.getBoundingClientRect();
+168:        const containerRect = container === window 
+172:        const scrollTop = container === window 
+176:        const targetY = elementRect.top - containerRect.top + scrollTop - 20; // 20px padding
+188:    const applySettings = (data: any) => {
+279:    const loadSettings = async () => {
+282:        const localDataStr = localStorage.getItem("app_settings");
+284:          const data = JSON.parse(localDataStr);
+296:          const docRef = doc(db, "settings", "demo_data");
+297:          const docSnap = await getDoc(docRef);
+300:            const data = docSnap.data();
+325:    const currentState = {
+342:    const saveTimeout = setTimeout(() => {
+345:        const stateToSave = { ...currentState };
+349:        const isBase64 = (str: string) => str && str.startsWith('data:image');
+365:          const stateWithoutImages = { ...currentState, image: "", image2: "", quoteImage: "" };
+394:      const font = new FontFace(customFontName, `url(${customFontUrl})`);
+404:      const font = new FontFace(brandFontName, `url(${brandFontUrl})`);
+411:  const handleDesignChange = (newDesign: number) => {
+434:  const toggleFullscreen = async () => {
+453:  const reloadApp = () => {
+457:  const toggleTheme = () => {
+461:  const toggleLanguage = () => {
+465:  const fetchLinkData = async (e: React.FormEvent) => {
+473:      const response = await fetch("/api/fetch-link", {
+479:      const data = await response.json();
+494:  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: "news" | "news2" | "logo" | "quote" | "watermark" | "fullBrandLogo") => {
+495:    const file = e.target.files?.[0];
+498:        const videoUrl = URL.createObjectURL(file);
+499:        const markedUrl = `data:video/blob;${videoUrl}`;
+512:      const reader = new FileReader();
+514:        const imageUrl = reader.result as string;
+515:        const isVideo = imageUrl.startsWith('data:video/');
+546:  const generateContentFromImage = async (base64Image: string, type: "news" | "quote") => {
+549:      const { GoogleGenAI } = await import('@google/genai');
+550:      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+552:      const base64Data = base64Image.split(',')[1];
+553:      const mimeType = base64Image.split(';')[0].split(':')[1];
+573:      const contentsPayload = {
+601:        const text = response.text.replace(/```json/g, '').replace(/```/g, '').trim();
+602:        const data = JSON.parse(text);
+615:      const errorMsg = error?.message || '';
+624:  const handleColorExtracted = useCallback((color: string, rgb: [number, number, number]) => {
+632:      const sRGB = rgb.map(val => {
+636:      const luminance = 0.2126 * sRGB[0] + 0.7152 * sRGB[1] + 0.0722 * sRGB[2];
+640:      const newHeadlineColor = luminance > 0.179 ? '#111827' : '#ffffff';
+656:      const darken = (factor: number) => `rgb(${Math.floor(rgb[0] * factor)}, ${Math.floor(rgb[1] * factor)}, ${Math.floor(rgb[2] * factor)})`;
+674:  const resetAll = () => {
+695:  const randomizeGeometricShapes = () => {
+696:    const types = ['circle', 'cross', 'hexagon', 'square', 'dots', 'parallelLines', 'triangle', 'zigzag', 'circleDots', 'dottedCircle', 'solidCircle'];
+697:    const newConfig = Array.from({ length: 15 }).map(() => {
+698:      const type = types[Math.floor(Math.random() * types.length)];
+699:      const size = Math.floor(Math.random() * 150) + 30; // 30px to 180px
+700:      const top = Math.random() > 0.5 ? `${Math.floor(Math.random() * 100)}%` : undefined;
+701:      const bottom = top ? undefined : `${Math.floor(Math.random() * 100)}%`;
+702:      const left = Math.random() > 0.5 ? `${Math.floor(Math.random() * 100)}%` : undefined;
+703:      const right = left ? undefined : `${Math.floor(Math.random() * 100)}%`;
+704:      const rotation = Math.floor(Math.random() * 360);
+705:      const opacityMultiplier = Math.random() * 0.8 + 0.2; // 0.2 to 1.0 multiplier
+712:  const resetGeometricShapes = () => {
+716:  const applyRandomDesign = () => {
+719:    const randomDesign = Math.floor(Math.random() * 20);
+723:    const randomColor = `#${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')}`;
+727:    const hex = randomColor.replace('#', '');
+728:    const r = parseInt(hex.substr(0, 2), 16);
+729:    const g = parseInt(hex.substr(2, 2), 16);
+730:    const b = parseInt(hex.substr(4, 2), 16);
+731:    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+737:    const darken = (factor: number) => `rgb(${Math.floor(r * factor)}, ${Math.floor(g * factor)}, ${Math.floor(b * factor)})`;
+754:  const loadDemoSetup = async () => {
+762:      const docRef = doc(db, "settings", "demo_data");
+763:      const docSnap = await getDoc(docRef);
+766:        const data = docSnap.data();

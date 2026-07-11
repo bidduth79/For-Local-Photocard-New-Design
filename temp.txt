@@ -1,0 +1,196 @@
+export const useAppState = () => {
+  const [activeTab, setActiveTab] = useState<"news" | "quote">("news");
+  const [language, setLanguage] = useState<"en" | "bn">("bn");
+  const [darkMode, setDarkMode] = useState(true);
+  const [isSettingsLoaded, setIsSettingsLoaded] = useState(false);
+  const [showFontSizeControl, setShowFontSizeControl] = useState(false);
+  const [showColorControl, setShowColorControl] = useState(false);
+  const [showBrandFontSizeControl, setShowBrandFontSizeControl] = useState(false);
+  const [showBrandColorControl, setShowBrandColorControl] = useState(false);
+  const [isBrandingExpanded, setIsBrandingExpanded] = useState(false);
+  const [isContentEditorExpanded, setIsContentEditorExpanded] = useState(false);
+  const [isDesignSettingsExpanded, setIsDesignSettingsExpanded] = useState(false);
+  const [isQuoteSpeakerExpanded, setIsQuoteSpeakerExpanded] = useState(false);
+  const [isStyleFontExpanded, setIsStyleFontExpanded] = useState(false);
+  const [isWatermarkExpanded, setIsWatermarkExpanded] = useState(false);
+  const [isAdvancedColorsExpanded, setIsAdvancedColorsExpanded] = useState(false);
+  const [isMobileDesignSettingsOpen, setIsMobileDesignSettingsOpen] = useState(false);
+  const [url, setUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [title, setTitle] = useState("");
+  const [visualTitle, setVisualTitle] = useState("");
+  const [isVisualMode, setIsVisualMode] = useState(false);
+  const [image, setImage] = useState(""); // URL or Base64
+  const [image2, setImage2] = useState(""); // Second image for Design 17
+  const [date, setDate] = useState(new Date());
+  const [brandName, setBrandName] = useState("নিউজ সাইটের নাম");
+  const [brandFontSize, setBrandFontSize] = useState(40);
+  const [brandColor, setBrandColor] = useState("#5934e8");
+  const [customWebsite, setCustomWebsite] = useState("");
+  const [customLogo, setCustomLogo] = useState("");
+  const [fullBrandLogo, setFullBrandLogo] = useState("");
+  const [fullBrandLogoHeight, setFullBrandLogoHeight] = useState(60);
+  const [design18LogoHeight, setDesign18LogoHeight] = useState(120);
+  const [selectedDesign, setSelectedDesign] = useState(0);
+  const [themeColor, setThemeColor] = useState("#f59e0b");
+  const [gradientStart, setGradientStart] = useState("#1f2937"); // Dark gray
+  const [gradientEnd, setGradientEnd] = useState("#000000"); // Black
+  const [cardGradientStart, setCardGradientStart] = useState("#1f2937");
+  const [cardGradientEnd, setCardGradientEnd] = useState("#000000");
+  const [headlineFontSize, setHeadlineFontSize] = useState(80);
+  const [headlineColor, setHeadlineColor] = useState("#111827");
+  const [backgroundPatterns, setBackgroundPatterns] = useState<string[]>([]);
+  const [patternScale, setPatternScale] = useState(100);
+  const [patternRotation, setPatternRotation] = useState(0);
+  const [patternOpacity, setPatternOpacity] = useState(10);
+  const [patternColor, setPatternColor] = useState("#888888");
+  const [isPatternSettingsExpanded, setIsPatternSettingsExpanded] = useState(false);
+  const [customFontUrl, setCustomFontUrl] = useState("");
+  const [customFontName, setCustomFontName] = useState("Hind Siliguri");
+  const [brandFontUrl, setBrandFontUrl] = useState("");
+  const [brandFontName, setBrandFontName] = useState("Hind Siliguri");
+  const [overlayOpacity, setOverlayOpacity] = useState(20); // Default 20%
+  const [showGeometricShapes, setShowGeometricShapes] = useState(true);
+  const [showDetailedNewsBox, setShowDetailedNewsBox] = useState(true);
+  const [geometricShapeColor, setGeometricShapeColor] = useState("#ffffff");
+  const [geometricShapeOpacity, setGeometricShapeOpacity] = useState(0.2); // Default 20% opacity
+  const [geometricShapesConfig, setGeometricShapesConfig] = useState<any[]>([]);
+  const [lastExtractedImage, setLastExtractedImage] = useState("");
+  const lastExtractedImageRef = useRef("");
+  const [applyGradientToAll, setApplyGradientToAll] = useState(false);
+  const [newsImageScale, setNewsImageScale] = useState(100);
+  const [autoColorMode, setAutoColorMode] = useState(true);
+  const [customDateColor, setCustomDateColor] = useState("");
+  const [customDateBgColor, setCustomDateBgColor] = useState("");
+  const [customDetailsTextColor, setCustomDetailsTextColor] = useState("");
+  const [customVisitTextColor, setCustomVisitTextColor] = useState("");
+  const [customLogoTextColor, setCustomLogoTextColor] = useState("");
+  const [customLogoBgColor, setCustomLogoBgColor] = useState("");
+  const [customQrColor, setCustomQrColor] = useState("");
+  const [customSocialIconColor, setCustomSocialIconColor] = useState("");
+  const [description, setDescription] = useState("");
+  const [hashtag, setHashtag] = useState("");
+  const [showSocialIcons, setShowSocialIcons] = useState(true);
+  const [descriptionFontSize, setDescriptionFontSize] = useState(24);
+  const [descriptionColor, setDescriptionColor] = useState("rgba(255, 255, 255, 0.9)");
+  const [descriptionBgColor, setDescriptionBgColor] = useState("#fef266");
+  const [showDescriptionBg, setShowDescriptionBg] = useState(true);
+  const [descriptionTextAlign, setDescriptionTextAlign] = useState<"left" | "center" | "right" | "justify">("left");
+  const [descriptionOffsetX, setDescriptionOffsetX] = useState(0);
+  const [descriptionOffsetY, setDescriptionOffsetY] = useState(0);
+  const [illustrationPrompt, setIllustrationPrompt] = useState("Transform this image into a high-quality digital illustration style, similar to a modern vector art or digital painting. Keep the main subjects recognizable but stylized. Add a beautiful, complementary background.");
+  const [isGeneratingIllustration, setIsGeneratingIllustration] = useState(false);
+  const [quoteText, setQuoteText] = useState("");
+  const [speakerName, setSpeakerName] = useState("");
+  const [speakerDesignation, setSpeakerDesignation] = useState("");
+  const [quoteImage, setQuoteImage] = useState("");
+  const [quoteFontSize, setQuoteFontSize] = useState(60);
+  const [quoteColor, setQuoteColor] = useState("#111827");
+  const [imageScale, setImageScale] = useState(100);
+  const [image2Scale, setImage2Scale] = useState(100);
+  const [image2OffsetY, setImage2OffsetY] = useState(0);
+  const [image2OffsetX, setImage2OffsetX] = useState(0);
+  const [image2FlipH, setImage2FlipH] = useState(false);
+  const [imageFilter, setImageFilter] = useState("none");
+  const [image2Filter, setImage2Filter] = useState("none");
+  const [imageVignette, setImageVignette] = useState(0);
+  const [image2Vignette, setImage2Vignette] = useState(0);
+  const [watermarkScale, setWatermarkScale] = useState(50);
+  const [watermarkOpacity, setWatermarkOpacity] = useState(10);
+  const [showWatermark, setShowWatermark] = useState(true);
+  const [quoteTextAlign, setQuoteTextAlign] = useState<"left" | "center" | "right" | "justify">("left");
+  const [quoteFontFamily, setQuoteFontFamily] = useState("Hind Siliguri");
+  const [quoteFontUrl, setQuoteFontUrl] = useState("");
+  const [neonColor, setNeonColor] = useState("#5934e8");
+  const [showNeon, setShowNeon] = useState(true);
+  const [removeBackground, setRemoveBackground] = useState(false);
+  const [quoteGradientStart, setQuoteGradientStart] = useState("#dbeafe");
+  const [quoteGradientEnd, setQuoteGradientEnd] = useState("#eff6ff");
+  const photocardRef = useRef<HTMLDivElement>(null);
+  const quoteCardRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef2 = useRef<HTMLInputElement>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const quoteImageInputRef = useRef<HTMLInputElement>(null);
+  const isSwitchingDesign = useRef(false);
+  const [imageOffsetY, setImageOffsetY] = useState(0);
+  const [imageOffsetX, setImageOffsetX] = useState(0);
+  const [imageFlipH, setImageFlipH] = useState(false);
+  const [textAlign, setTextAlign] = useState<"left" | "center" | "right" | "justify">("left");
+  const scrollToPanel = useCallback((panelId: string) => {
+      const element = document.getElementById(panelId);
+        const container = element.closest('.custom-scrollbar') || window;
+        const elementRect = element.getBoundingClientRect();
+        const containerRect = container === window 
+        const scrollTop = container === window 
+        const targetY = elementRect.top - containerRect.top + scrollTop - 20; // 20px padding
+    const applySettings = (data: any) => {
+    const loadSettings = async () => {
+        const localDataStr = localStorage.getItem("app_settings");
+          const data = JSON.parse(localDataStr);
+          const docRef = doc(db, "settings", "demo_data");
+          const docSnap = await getDoc(docRef);
+            const data = docSnap.data();
+    const currentState = {
+    const saveTimeout = setTimeout(() => {
+        const stateToSave = { ...currentState };
+        const isBase64 = (str: string) => str && str.startsWith('data:image');
+          const stateWithoutImages = { ...currentState, image: "", image2: "", quoteImage: "" };
+      const font = new FontFace(customFontName, `url(${customFontUrl})`);
+      const font = new FontFace(brandFontName, `url(${brandFontUrl})`);
+  const handleDesignChange = (newDesign: number) => {
+  const toggleFullscreen = async () => {
+  const reloadApp = () => {
+  const toggleTheme = () => {
+  const toggleLanguage = () => {
+  const fetchLinkData = async (e: React.FormEvent) => {
+      const response = await fetch("/api/fetch-link", {
+      const data = await response.json();
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: "news" | "news2" | "logo" | "quote" | "watermark" | "fullBrandLogo") => {
+    const file = e.target.files?.[0];
+        const videoUrl = URL.createObjectURL(file);
+        const markedUrl = `data:video/blob;${videoUrl}`;
+      const reader = new FileReader();
+        const imageUrl = reader.result as string;
+        const isVideo = imageUrl.startsWith('data:video/');
+  const generateContentFromImage = async (base64Image: string, type: "news" | "quote") => {
+      const { GoogleGenAI } = await import('@google/genai');
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const base64Data = base64Image.split(',')[1];
+      const mimeType = base64Image.split(';')[0].split(':')[1];
+      const contentsPayload = {
+        const text = response.text.replace(/```json/g, '').replace(/```/g, '').trim();
+        const data = JSON.parse(text);
+      const errorMsg = error?.message || '';
+  const handleColorExtracted = useCallback((color: string, rgb: [number, number, number]) => {
+      const sRGB = rgb.map(val => {
+      const luminance = 0.2126 * sRGB[0] + 0.7152 * sRGB[1] + 0.0722 * sRGB[2];
+      const newHeadlineColor = luminance > 0.179 ? '#111827' : '#ffffff';
+      const darken = (factor: number) => `rgb(${Math.floor(rgb[0] * factor)}, ${Math.floor(rgb[1] * factor)}, ${Math.floor(rgb[2] * factor)})`;
+  const resetAll = () => {
+  const randomizeGeometricShapes = () => {
+    const types = ['circle', 'cross', 'hexagon', 'square', 'dots', 'parallelLines', 'triangle', 'zigzag', 'circleDots', 'dottedCircle', 'solidCircle'];
+    const newConfig = Array.from({ length: 15 }).map(() => {
+      const type = types[Math.floor(Math.random() * types.length)];
+      const size = Math.floor(Math.random() * 150) + 30; // 30px to 180px
+      const top = Math.random() > 0.5 ? `${Math.floor(Math.random() * 100)}%` : undefined;
+      const bottom = top ? undefined : `${Math.floor(Math.random() * 100)}%`;
+      const left = Math.random() > 0.5 ? `${Math.floor(Math.random() * 100)}%` : undefined;
+      const right = left ? undefined : `${Math.floor(Math.random() * 100)}%`;
+      const rotation = Math.floor(Math.random() * 360);
+      const opacityMultiplier = Math.random() * 0.8 + 0.2; // 0.2 to 1.0 multiplier
+  const resetGeometricShapes = () => {
+  const applyRandomDesign = () => {
+    const randomDesign = Math.floor(Math.random() * 20);
+    const randomColor = `#${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')}`;
+    const hex = randomColor.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    const darken = (factor: number) => `rgb(${Math.floor(r * factor)}, ${Math.floor(g * factor)}, ${Math.floor(b * factor)})`;
+  const loadDemoSetup = async () => {
+      const docRef = doc(db, "settings", "demo_data");
+      const docSnap = await getDoc(docRef);
+        const data = docSnap.data();
