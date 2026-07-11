@@ -304,8 +304,8 @@ const Photocard = forwardRef<HTMLDivElement, PhotocardProps>(
                 loop
                 playsInline
                 style={{
-                  width: '100%',
-                  height: '100%',
+                  width: videoFit === 'contain' ? undefined : '100%',
+                  height: videoFit === 'contain' ? undefined : '100%',
                   maxWidth: '100%',
                   maxHeight: '100%',
                   objectFit: (isVideoDesign && videoFit === 'contain') ? 'contain' : (isFullscreenDesign ? 'cover' : 'contain'),

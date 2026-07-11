@@ -295,7 +295,11 @@ export const useImageDownload = () => {
           mainVideoStyles = {
             objectFit: computedStyle.objectFit || 'cover',
             objectPosition: computedStyle.objectPosition || '50% 50%',
-            transform: computedStyle.transform || 'none'
+            transform: computedStyle.transform || 'none',
+            scale: useAppStore.getState().imageScale,
+            offsetX: useAppStore.getState().imageOffsetX,
+            offsetY: useAppStore.getState().imageOffsetY,
+            flipH: useAppStore.getState().imageFlipH
           };
         }
         

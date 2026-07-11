@@ -91,12 +91,21 @@ async function startServer() {
         const x = Math.round(left);
         const y = Math.round(top);
         const isContain = config.mainVideoStyles?.objectFit === 'contain';
+        const scalePct = config.mainVideoStyles?.scale || 100;
+        const offsetX = config.mainVideoStyles?.offsetX || 0;
+        const offsetY = config.mainVideoStyles?.offsetY || 0;
+        const flipH = config.mainVideoStyles?.flipH ? -1 : 1;
+        const scaleFactor = scalePct / 100;
+        
+        const targetW = Math.round((w * scaleFactor) / 2) * 2;
+        const targetH = Math.round((h * scaleFactor) / 2) * 2;
+        const hflipFilter = flipH === -1 ? ',hflip' : '';
 
         if (isContain) {
-          filters.push(`[1:v]scale=${w}:${h}:force_original_aspect_ratio=decrease[mainv]`);
-          filters.push(`[${lastBase}][mainv]overlay=${x}+(${w}-w)/2:${y}+(${h}-h)/2[base2]`);
+          filters.push(`[1:v]scale=${targetW}:${targetH}:force_original_aspect_ratio=decrease${hflipFilter}[mainv]`);
+          filters.push(`[${lastBase}][mainv]overlay=${x}+(${w}-w)/2+${offsetX}:${y}+(${h}-h)/2+${offsetY}[base2]`);
         } else {
-          filters.push(`[1:v]scale=${w}:${h}:force_original_aspect_ratio=increase,crop=${w}:${h}[mainv]`);
+          filters.push(`[1:v]scale=${targetW}:${targetH}:force_original_aspect_ratio=increase${hflipFilter},crop=${w}:${h}:(in_w-out_w)/2-${offsetX}:(in_h-out_h)/2-${offsetY}[mainv]`);
           filters.push(`[${lastBase}][mainv]overlay=${x}:${y}[base2]`);
         }
         lastBase = 'base2';
