@@ -115,9 +115,9 @@ async function startServer() {
       const filterComplex = filters.join(';');
 
       const ffmpegArgs = [
-        '-i', bgPath,
+        '-loop', '1', '-i', bgPath,
         '-i', videoPath,
-        '-i', fgPath,
+        '-loop', '1', '-i', fgPath,
         '-filter_complex', filterComplex,
         '-map', '[outv]',
         '-map', '1:a?', // include audio from video if present

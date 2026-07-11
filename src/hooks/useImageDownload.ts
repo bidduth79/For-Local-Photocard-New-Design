@@ -153,11 +153,21 @@ export const useImageDownload = () => {
         filter,
       };
 
-      const result = format === 'blob' 
-        ? await toBlob(clone, options).catch(e => { console.error("toBlob failed:", e); throw e; })
-        : await toPng(clone, options).catch(e => { console.error("toPng failed:", e); throw e; });
+      const dataUrl = await toPng(clone, options).catch(e => { console.error("toPng failed:", e); throw e; });
 
-      return result;
+      if (format === 'blob') {
+        const arr = dataUrl.split(',');
+        const mime = arr[0].match(/:(.*?);/)[1];
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], { type: mime });
+      }
+      
+      return dataUrl;
     } catch (err) {
       console.error("Failed to generate image at final catch block:", err);
       throw err;
@@ -226,7 +236,7 @@ export const useImageDownload = () => {
         let bgVideoStyles = { objectFit: 'cover', objectPosition: 'center', transform: 'scale(1.1)', filter: 'blur(20px)', opacity: '0.6' };
         
         let mainVideoRect = { left: 0, top: 0, width: targetWidth, height: targetHeight };
-        let mainVideoStyles = { objectFit: 'cover', objectPosition: 'center', transform: 'none' };
+        let mainVideoStyles: any = { objectFit: 'cover', objectPosition: 'center', transform: 'none' };
         let logoVideoRect = { left: 0, top: 0, width: targetWidth, height: targetHeight };
         let logoVideoStyles = { objectFit: 'contain', objectPosition: 'center', transform: 'none' };
         
