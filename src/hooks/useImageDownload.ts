@@ -319,6 +319,38 @@ export const useImageDownload = () => {
           const videoResp = await fetch(videoSrc);
           const videoBlob = await videoResp.blob();
           formData.append('video', videoBlob, 'video.mp4');
+          
+          const state = useAppStore.getState();
+          const patternEl = ref.current.querySelector('.animate-bg-pattern') as HTMLElement;
+          let hasAnimatedPattern = false;
+          let patternSize = 200;
+          if (patternEl && patternEl.style.backgroundImage) {
+            const match = patternEl.style.backgroundImage.match(/url\(['"]?(data:image\/svg\+xml[^'"]*)['"]?\)/);
+            if (match) {
+              const svgDataUrl = match[1];
+              const patSize = state.patternScale ? state.patternScale * 2 : 200;
+              const canvas = document.createElement('canvas');
+              canvas.width = targetWidth + patSize;
+              canvas.height = targetHeight + patSize;
+              const ctx = canvas.getContext('2d');
+              if (ctx) {
+                const img = new Image();
+                img.src = svgDataUrl;
+                await new Promise(resolve => img.onload = resolve);
+                const pat = ctx.createPattern(img, 'repeat');
+                if (pat) {
+                  ctx.fillStyle = pat;
+                  ctx.fillRect(0, 0, canvas.width, canvas.height);
+                  const patBlob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'));
+                  if (patBlob) {
+                    formData.append('pattern', patBlob, 'pattern.png');
+                    hasAnimatedPattern = true;
+                    patternSize = patSize;
+                  }
+                }
+              }
+            }
+          }
 
           const config = {
             hasBgVideo: !!bgVideoEl,
@@ -328,7 +360,12 @@ export const useImageDownload = () => {
             mainVideoRect,
             mainVideoStyles,
             targetWidth,
-            targetHeight
+            targetHeight,
+            hasAnimatedPattern,
+            patternSize,
+            hasAnimatedBorder: state.selectedDesign === 20,
+            themeColor: state.themeColor,
+            videoDuration: mainVideoEl ? mainVideoEl.duration : 15
           };
           formData.append('config', JSON.stringify(config));
 

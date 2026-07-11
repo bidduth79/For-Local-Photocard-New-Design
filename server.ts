@@ -48,7 +48,8 @@ async function startServer() {
   app.post("/api/render-video", upload.fields([
     { name: 'bgImage', maxCount: 1 },
     { name: 'fgImage', maxCount: 1 },
-    { name: 'video', maxCount: 1 }
+    { name: 'video', maxCount: 1 },
+    { name: 'pattern', maxCount: 1 }
   ]), async (req, res) => {
     try {
       const files = req.files as { [fieldname: string]: Express.Multer.File[] };
@@ -65,9 +66,27 @@ async function startServer() {
       const videoPath = files.video[0].path;
       const outputPath = path.join(_dirname, 'temp_uploads', `output_${Date.now()}.mp4`);
 
+      const ffmpegInputs = [
+        '-loop', '1', '-i', bgPath,
+        '-i', videoPath,
+        '-loop', '1', '-i', fgPath
+      ];
+
+      let patternIdx = -1;
+      if (config.hasAnimatedPattern && files.pattern) {
+        ffmpegInputs.push('-loop', '1', '-i', files.pattern[0].path);
+        patternIdx = 3;
+      }
+
       // We need to construct a filter_complex string
       const filters = [];
       let lastBase = '0:v'; // start with bgImage
+
+      if (patternIdx !== -1) {
+        const P = config.patternSize || 200;
+        filters.push(`[${lastBase}][${patternIdx}:v]overlay=x='-mod(t*${P}/20,${P})':y='-mod(t*${P}/20,${P})'[withpat]`);
+        lastBase = 'withpat';
+      }
 
       // 1. Background video (blurred)
       if (config.hasBgVideo) {
@@ -100,7 +119,6 @@ async function startServer() {
         const targetW = Math.round((w * scaleFactor) / 2) * 2;
         const targetH = Math.round((h * scaleFactor) / 2) * 2;
         const hflipFilter = flipH === -1 ? ',hflip' : '';
-
         filters.push(`color=c=black@0:size=${w}x${h}:d=9999[vbox]`);
         filters.push(`[1:v]scale=${targetW}:${targetH}:force_original_aspect_ratio=${isContain ? 'decrease' : 'increase'}${hflipFilter}[vscaled]`);
         filters.push(`[vbox][vscaled]overlay=x=(W-w)/2+${offsetX}:y=(H-h)/2+${offsetY}:shortest=1[mainv]`);
@@ -110,14 +128,40 @@ async function startServer() {
       }
 
       // 3. Foreground image
-      filters.push(`[${lastBase}][2:v]overlay=0:0[outv]`);
+      filters.push(`[${lastBase}][2:v]overlay=0:0[withfg]`);
+      lastBase = 'withfg';
+
+      // 4. Animated border
+      if (config.hasAnimatedBorder && config.themeColor) {
+        const tw = config.targetWidth;
+        const th = config.targetHeight;
+        const color = config.themeColor;
+        const P = 2 * tw + 2 * th;
+        const D = config.videoDuration || 15;
+
+        filters.push(`color=c=${color}:s=${tw}x10:d=9999[topbar]`);
+        filters.push(`color=c=${color}:s=10x${th}:d=9999[rightbar]`);
+        filters.push(`color=c=${color}:s=${tw}x10:d=9999[botbar]`);
+        filters.push(`color=c=${color}:s=10x${th}:d=9999[leftbar]`);
+
+        const d_expr = `((t/${D})*${P})`;
+        const top_x = `min(${d_expr},${tw})-${tw}`;
+        const right_y = `min(max(${d_expr}-${tw},0),${th})-${th}`;
+        const bot_x = `${tw}-min(max(${d_expr}-${tw}-${th},0),${tw})`;
+        const left_y = `${th}-min(max(${d_expr}-${tw}*2-${th},0),${th})`;
+
+        filters.push(`[${lastBase}][topbar]overlay=x='${top_x}':y=0[b1]`);
+        filters.push(`[b1][rightbar]overlay=x=${tw}-10:y='${right_y}'[b2]`);
+        filters.push(`[b2][botbar]overlay=x='${bot_x}':y=${th}-10[b3]`);
+        filters.push(`[b3][leftbar]overlay=x=0:y='${left_y}'[outv]`);
+      } else {
+        filters.push(`[${lastBase}]copy[outv]`);
+      }
 
       const filterComplex = filters.join(';');
 
       const ffmpegArgs = [
-        '-loop', '1', '-i', bgPath,
-        '-i', videoPath,
-        '-loop', '1', '-i', fgPath,
+        ...ffmpegInputs,
         '-filter_complex', filterComplex,
         '-map', '[outv]',
         '-map', '1:a?', // include audio from video if present
