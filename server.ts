@@ -101,13 +101,11 @@ async function startServer() {
         const targetH = Math.round((h * scaleFactor) / 2) * 2;
         const hflipFilter = flipH === -1 ? ',hflip' : '';
 
-        if (isContain) {
-          filters.push(`[1:v]scale=${targetW}:${targetH}:force_original_aspect_ratio=decrease${hflipFilter}[mainv]`);
-          filters.push(`[${lastBase}][mainv]overlay=${x}+(${w}-w)/2+${offsetX}:${y}+(${h}-h)/2+${offsetY}[base2]`);
-        } else {
-          filters.push(`[1:v]scale=${targetW}:${targetH}:force_original_aspect_ratio=increase${hflipFilter},crop=${w}:${h}:(in_w-out_w)/2-${offsetX}:(in_h-out_h)/2-${offsetY}[mainv]`);
-          filters.push(`[${lastBase}][mainv]overlay=${x}:${y}[base2]`);
-        }
+        filters.push(`color=c=black@0:size=${w}x${h}:d=9999[vbox]`);
+        filters.push(`[1:v]scale=${targetW}:${targetH}:force_original_aspect_ratio=${isContain ? 'decrease' : 'increase'}${hflipFilter}[vscaled]`);
+        filters.push(`[vbox][vscaled]overlay=x=(W-w)/2+${offsetX}:y=(H-h)/2+${offsetY}:shortest=1[mainv]`);
+        filters.push(`[${lastBase}][mainv]overlay=${x}:${y}[base2]`);
+        
         lastBase = 'base2';
       }
 
