@@ -144,7 +144,7 @@ export const useImageDownload = () => {
 
       const options = {
         quality: 1.0,
-        pixelRatio: 2, // High resolution for sharp text
+        pixelRatio: isVideoExport ? 1 : 2, // High resolution for sharp text
         width: targetWidth,
         height: targetHeight,
         cacheBust: true,
@@ -154,19 +154,10 @@ export const useImageDownload = () => {
       };
 
       const dataUrl = await toPng(clone, options).catch(e => { console.error("toPng failed:", e); throw e; });
-
-      if (format === 'blob') {
-        const arr = dataUrl.split(',');
-        const mime = arr[0].match(/:(.*?);/)[1];
-        const bstr = atob(arr[1]);
-        let n = bstr.length;
-        const u8arr = new Uint8Array(n);
-        while (n--) {
-          u8arr[n] = bstr.charCodeAt(n);
-        }
-        return new Blob([u8arr], { type: mime });
+      if (format === "blob") {
+        const res = await fetch(dataUrl);
+        return await res.blob();
       }
-      
       return dataUrl;
     } catch (err) {
       console.error("Failed to generate image at final catch block:", err);
