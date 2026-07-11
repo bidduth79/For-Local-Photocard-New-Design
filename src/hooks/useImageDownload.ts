@@ -3,6 +3,7 @@ import { RefObject } from "react";
 import { showToast } from "../utils/toast";
 import { checkDownloadLimit, recordDownload } from "../services/authService";
 import { getGoogleFontsCSS } from "../utils/fontUtils";
+import { useAppStore } from "../store/appStore";
 
 export const useImageDownload = () => {
   const generateImage = async (

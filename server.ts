@@ -133,7 +133,7 @@ async function startServer() {
 
       const ffmpeg = spawn('ffmpeg', ffmpegArgs);
 
-      ffmpeg.stderr.on('data', (data) => {
+      ffmpeg.stderr.on("data", (data) => {
         console.log(`ffmpeg: ${data}`);
       });
 
