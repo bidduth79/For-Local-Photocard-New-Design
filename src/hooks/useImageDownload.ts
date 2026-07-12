@@ -325,8 +325,8 @@ export const useImageDownload = () => {
           let hasAnimatedPattern = false;
           let patternSize = 200;
           if (patternEl && patternEl.style.backgroundImage) {
-            const match = patternEl.style.backgroundImage.match(/url\(['"]?(data:image\/svg\+xml[^'"]*)['"]?\)/);
-            if (match) {
+            const match = patternEl.style.backgroundImage.match(/^url\(['"]?(.*?)['"]?\)$/i);
+            if (match && match[1].startsWith('data:image/svg+xml')) {
               const svgDataUrl = match[1];
               const patSize = state.patternScale ? state.patternScale * 2 : 200;
               const canvas = document.createElement('canvas');
@@ -336,7 +336,10 @@ export const useImageDownload = () => {
               if (ctx) {
                 const img = new Image();
                 img.src = svgDataUrl;
-                await new Promise(resolve => img.onload = resolve);
+                await new Promise(resolve => {
+                  img.onload = resolve;
+                  img.onerror = resolve;
+                });
                 const pat = ctx.createPattern(img, 'repeat');
                 if (pat) {
                   ctx.fillStyle = pat;
