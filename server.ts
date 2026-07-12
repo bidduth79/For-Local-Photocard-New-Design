@@ -55,7 +55,7 @@ async function startServer() {
       const files = req.files as { [fieldname: string]: Express.Multer.File[] };
       const configStr = req.body.config;
       
-      if (!files.bgImage || !files.fgImage || !files.video || !configStr) {
+      if (!files.bgImage || !files.fgImage || !configStr) {
         return res.status(400).json({ error: "Missing required files or config" });
       }
 
@@ -63,14 +63,19 @@ async function startServer() {
       
       const bgPath = files.bgImage[0].path;
       const fgPath = files.fgImage[0].path;
-      const videoPath = files.video[0].path;
+      const videoPath = files.video ? files.video[0].path : '';
       const outputPath = path.join(_dirname, 'temp_uploads', `output_${Date.now()}.mp4`);
 
       const ffmpegInputs = [
-        '-loop', '1', '-i', bgPath,
-        '-i', videoPath,
-        '-loop', '1', '-i', fgPath
+        '-loop', '1', '-i', bgPath
       ];
+      if (videoPath) {
+        ffmpegInputs.push('-i', videoPath);
+      } else {
+        // dummy input 1 to satisfy mapping if needed, though we should avoid using it if not hasMainVideo
+        ffmpegInputs.push('-f', 'lavfi', '-i', 'color=c=black:s=10x10:d=1');
+      }
+      ffmpegInputs.push('-loop', '1', '-i', fgPath);
 
       let patternIdx = -1;
       if (config.hasAnimatedPattern && files.pattern) {
@@ -169,7 +174,7 @@ async function startServer() {
         '-preset', 'fast',
         '-pix_fmt', 'yuv420p',
         '-c:a', 'aac',
-        '-shortest', // end when the shortest input ends (the video)
+        '-t', `${config.videoDuration || 15}`,
         outputPath
       ];
 
@@ -188,7 +193,7 @@ async function startServer() {
             // cleanup
             fs.unlink(bgPath, () => {});
             fs.unlink(fgPath, () => {});
-            fs.unlink(videoPath, () => {});
+            if (videoPath) fs.unlink(videoPath, () => {});
             fs.unlink(outputPath, () => {});
           });
         } else {

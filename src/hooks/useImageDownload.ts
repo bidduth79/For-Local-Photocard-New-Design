@@ -186,13 +186,14 @@ export const useImageDownload = () => {
     }
 
     try {
-      const isVideo = imageUrl?.startsWith('data:video/');
+      const isVideoFile = imageUrl?.startsWith('data:video/') || imageUrl?.match(/\.(mp4|webm|mov|ogg)(\?.*)?$/i);
+      const isVideo = isVideoFile || selectedDesign === 20;
       
       if (isVideo) {
         showToast.success(language === 'bn' ? 'ভিডিও তৈরি হচ্ছে, দয়া করে অপেক্ষা করুন...' : 'Generating video, please wait...');
-        const videoSrc = imageUrl!.startsWith('data:video/blob;') 
-          ? imageUrl!.replace('data:video/blob;', '') 
-          : imageUrl!;
+        const videoSrc = imageUrl ? (imageUrl.startsWith('data:video/blob;') 
+          ? imageUrl.replace('data:video/blob;', '') 
+          : imageUrl) : '';
           
         const ref = activeTab === "news" ? photocardRef : quoteCardRef;
         if (!ref.current) return { success: false };
@@ -316,9 +317,17 @@ export const useImageDownload = () => {
           formData.append('fgImage', fgBlob, 'fg.png');
           formData.append('bgImage', bgBlob, 'bg.png');
 
-          const videoResp = await fetch(videoSrc);
-          const videoBlob = await videoResp.blob();
-          formData.append('video', videoBlob, 'video.mp4');
+          if (videoSrc) {
+            try {
+              const videoResp = await fetch(videoSrc);
+              if (videoResp.ok) {
+                const videoBlob = await videoResp.blob();
+                formData.append('video', videoBlob, 'video.mp4');
+              }
+            } catch (err) {
+              console.warn("Could not fetch video, proceeding without it", err);
+            }
+          }
           
           const state = useAppStore.getState();
           const patternEl = ref.current.querySelector('.animate-bg-pattern') as HTMLElement;
