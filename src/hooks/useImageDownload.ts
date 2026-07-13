@@ -246,7 +246,7 @@ export const useImageDownload = () => {
           };
           const computedStyle = window.getComputedStyle(bgVideoEl);
           bgVideoStyles = {
-            objectFit: computedStyle.objectFit || 'cover',
+            objectFit: useAppStore.getState().videoFit === 'contain' ? 'contain' : (computedStyle.objectFit || 'cover'),
             objectPosition: computedStyle.objectPosition || '50% 50%',
             transform: computedStyle.transform || 'scale(1.1)',
             filter: computedStyle.filter || 'blur(20px)',
@@ -296,7 +296,7 @@ export const useImageDownload = () => {
           };
           const computedStyle = window.getComputedStyle(mainVideoEl);
           mainVideoStyles = {
-            objectFit: computedStyle.objectFit || 'cover',
+            objectFit: useAppStore.getState().videoFit === 'contain' ? 'contain' : (computedStyle.objectFit || 'cover'),
             objectPosition: computedStyle.objectPosition || '50% 50%',
             transform: computedStyle.transform || 'none',
             scale: useAppStore.getState().imageScale,

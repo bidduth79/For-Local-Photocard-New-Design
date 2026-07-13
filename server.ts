@@ -186,7 +186,7 @@ async function startServer() {
         outputPath
       ];
 
-      console.log('Running FFmpeg with args:', ffmpegArgs.join(' '));
+      console.log("config received:", JSON.stringify(config)); console.log("Running FFmpeg with args:", ffmpegArgs.join(" "));
 
       const ffmpeg = spawn('ffmpeg', ffmpegArgs);
 
