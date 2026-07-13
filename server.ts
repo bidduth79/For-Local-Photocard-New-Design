@@ -98,7 +98,13 @@ async function startServer() {
       if (patternIdx !== -1) {
         const PX = config.patternSize || 200;
         const PY = config.patternH || config.patternSize || 200;
-        filters.push(`[${lastBase}][${patternIdx}:v]overlay=x='-mod(t*${PX}/20,${PX})':y='-mod(t*${PY}/20,${PY})'[withpat]`);
+        const rot = config.patternRotation || 0;
+        const opacity = config.patternOpacity !== undefined ? config.patternOpacity / 100 : 0.1;
+        const tw = Math.round(config.targetWidth / 2) * 2;
+        const th = Math.round(config.targetHeight / 2) * 2;
+        filters.push(`[${patternIdx}:v]crop=w=${tw * 2}:h=${th * 2}:x='mod(t*${PX}/20,${PX})':y='mod(t*${PY}/20,${PY})'[patcrop]`);
+        filters.push(`[patcrop]rotate=${rot}*PI/180:ow=${tw}:oh=${th}:c=none,format=yuva420p,colorchannelmixer=aa=${opacity}[patrot]`);
+        filters.push(`[${lastBase}][patrot]overlay=0:0[withpat]`);
         lastBase = 'withpat';
       }
 
@@ -135,7 +141,7 @@ async function startServer() {
         const hflipFilter = flipH === -1 ? ',hflip' : '';
         filters.push(`color=c=black@0:size=${w}x${h}:d=9999,format=yuva420p[vbox]`);
         filters.push(`[1:v]scale=${targetW}:${targetH}:force_original_aspect_ratio=${isContain ? 'decrease' : 'increase'}${hflipFilter}[vscaled]`);
-        filters.push(`[vbox][vscaled]overlay=x=(W-w)/2+${offsetX}:y=(H-h)/2+${offsetY}:shortest=1[mainv]`);
+        filters.push(`[vbox][vscaled]overlay=x='(W-w)*(${50 + offsetX}/100)':y='(H-h)*(${50 + offsetY}/100)':shortest=1[mainv]`);
         filters.push(`[${lastBase}][mainv]overlay=${x}:${y}[base2]`);
         
         lastBase = 'base2';

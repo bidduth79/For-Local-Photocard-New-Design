@@ -307,7 +307,7 @@ const Photocard = forwardRef<HTMLDivElement, PhotocardProps>(
                   width: '100%',
                   height: '100%',
                   objectFit: videoFit === 'contain' ? 'contain' : (isFullscreenDesign ? 'cover' : 'contain'),
-                  objectPosition: videoFit === 'contain' ? '50% 50%' : `calc(50% + ${currentOffsetX}px) calc(50% + ${currentOffsetY}px)`,
+                  objectPosition: videoFit === 'contain' ? '50% 50%' : `${50 + currentOffsetX}% ${50 + currentOffsetY}%`,
                   transform: `scaleX(${currentFlipH ? -1 : 1}) scale(${currentScale / 100})`,
                   filter: currentFilter !== 'none' ? currentFilter : undefined,
                   ...(videoFadeEdges && videoFit === 'contain' ? {
@@ -372,7 +372,7 @@ const Photocard = forwardRef<HTMLDivElement, PhotocardProps>(
                 style={{
                   backgroundImage: `url(${imageUrl})`,
                   backgroundSize: isFullscreenDesign ? 'cover' : 'contain',
-                  backgroundPosition: `calc(50% + ${currentOffsetX}px) calc(50% + ${currentOffsetY}px)`,
+                  backgroundPosition: `${50 + currentOffsetX}% ${50 + currentOffsetY}%`,
                   backgroundRepeat: 'no-repeat',
                   transform: `scaleX(${currentFlipH ? -1 : 1}) scale(${currentScale / 100})`,
                   filter: currentFilter !== 'none' ? currentFilter : undefined

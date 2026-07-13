@@ -361,8 +361,8 @@ export const useImageDownload = () => {
               } catch (e) {}
 
               const canvas = document.createElement('canvas');
-              canvas.width = targetWidth + patW;
-              canvas.height = targetHeight + patH;
+              canvas.width = targetWidth * 2 + patW;
+              canvas.height = targetHeight * 2 + patH;
               const ctx = canvas.getContext('2d');
               if (ctx) {
                 const img = new Image();
@@ -406,6 +406,8 @@ export const useImageDownload = () => {
             hasAnimatedPattern,
             patternSize,
             patternH,
+            patternRotation: state.patternRotation,
+            patternOpacity: state.patternOpacity,
             hasAnimatedBorder: state.selectedDesign === 20,
             themeColor: state.themeColor,
             videoDuration: mainVideoEl ? mainVideoEl.duration : 15
