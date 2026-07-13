@@ -39,7 +39,7 @@ export const Design3: React.FC<NewsDesignProps> = ({
 
   return (
     <>
-      <div className="absolute inset-0 z-0 bg-black [.export-video_&]:!bg-transparent overflow-hidden flex items-center justify-center">
+      <div className="absolute inset-0 z-0 bg-black [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent overflow-hidden flex items-center justify-center">
         {renderImage("w-full h-full object-cover opacity-100")}
       </div>
 

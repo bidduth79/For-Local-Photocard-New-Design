@@ -27,7 +27,7 @@ export const Design22: React.FC<NewsDesignProps> = ({
   const bgContrastColor = getContrastColor(primaryColor);
   
   return (
-    <div className="absolute inset-0 bg-gray-900 [.export-video_&]:!bg-transparent z-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 bg-gray-900 [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent z-0 overflow-hidden pointer-events-none">
       {/* Background Image */}
       <div className="absolute inset-0 z-0 pointer-events-auto">
         {renderImage("w-full h-full object-cover")}

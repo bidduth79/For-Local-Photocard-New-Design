@@ -322,6 +322,10 @@ export const useImageDownload = () => {
               const videoResp = await fetch(videoSrc);
               if (videoResp.ok) {
                 const videoBlob = await videoResp.blob();
+                if (videoBlob.size > 30 * 1024 * 1024) {
+                   showToast.error(language === 'bn' ? 'ভিডিও সাইজ অনেক বড়। দয়া করে ৩০ মেগাবাইটের কম সাইজের ভিডিও ব্যবহার করুন।' : 'Video is too large. Please use a video smaller than 30MB.');
+                   return { success: false };
+                }
                 formData.append('video', videoBlob, 'video.mp4');
               }
             } catch (err) {
@@ -380,27 +384,35 @@ export const useImageDownload = () => {
             videoDuration: mainVideoEl ? mainVideoEl.duration : 15
           };
           formData.append('config', JSON.stringify(config));
-
           const response = await fetch('/api/render-video', {
             method: 'POST',
             body: formData
           });
 
           if (!response.ok) {
+            if (response.status === 413) {
+                throw new Error('Video size is too large for the server to process');
+            }
             throw new Error('Video rendering failed on server');
           }
 
           const renderedBlob = await response.blob();
           const url = URL.createObjectURL(renderedBlob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `mediacell-${activeTab}-${Date.now()}.mp4`;
-          link.click();
-          URL.revokeObjectURL(url);
-          showToast.success(language === 'bn' ? 'ভিডিও ডাউনলোড সম্পূর্ণ হয়েছে!' : 'Video download complete!');
-        } catch (err) {
+          
+          return { 
+            success: true, 
+            videoUrl: url, 
+            filename: `mediacell-${activeTab}-${Date.now()}.mp4` 
+          };
+
+        } catch (err: any) {
           console.error('Server rendering failed:', err);
-          showToast.error(language === 'bn' ? 'ভিডিও তৈরি করতে সমস্যা হয়েছে। আপনার লোকাল FFmpeg সেটআপ চেক করুন।' : 'Failed to render video. Check local FFmpeg setup.');
+          const errMsg = err.message || '';
+          if (errMsg.includes('size is too large')) {
+             showToast.error(language === 'bn' ? 'ভিডিও সাইজ অনেক বড়। দয়া করে ছোট ভিডিও ব্যবহার করুন।' : 'Video is too large for the server. Please use a smaller video.');
+          } else {
+             showToast.error(language === 'bn' ? 'ভিডিও তৈরি করতে সমস্যা হয়েছে। আপনার লোকাল FFmpeg সেটআপ চেক করুন।' : 'Failed to render video. Check local FFmpeg setup.');
+          }
           return { success: false };
         }
         

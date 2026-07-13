@@ -45,7 +45,7 @@ export const Design1: React.FC<NewsDesignProps> = ({
 
   return (
     <>
-      <div className="absolute inset-0 z-0 bg-gray-900 [.export-video_&]:!bg-transparent">
+      <div className="absolute inset-0 z-0 bg-gray-900 [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent">
         {/* Gradient Background */}
         <div 
           className="absolute inset-0 opacity-80"

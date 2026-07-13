@@ -145,7 +145,7 @@ export const Design17: React.FC<NewsDesignProps> = ({
             )}
             {/* Gradient Overlay for first image */}
             {overlayOpacity !== 0 && (
-              <div className="absolute inset-0 bg-gradient-to-t [.export-video_&]:!bg-transparent from-black/40 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent from-black/40 via-transparent to-transparent pointer-events-none" />
             )}
           </div>
 
@@ -162,7 +162,7 @@ export const Design17: React.FC<NewsDesignProps> = ({
             )}
             {/* Gradient Overlay for second image */}
             {overlayOpacity !== 0 && (
-              <div className="absolute inset-0 bg-gradient-to-t [.export-video_&]:!bg-transparent from-black/40 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent from-black/40 via-transparent to-transparent pointer-events-none" />
             )}
           </div>
         </div>

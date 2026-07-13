@@ -39,7 +39,7 @@ export const Design13: React.FC<NewsDesignProps> = ({
   customSocialIconColor
 }) => {
   return (
-    <div className="relative w-full h-full flex-1 min-h-0 bg-slate-900 [.export-video_&]:!bg-transparent overflow-hidden flex">
+    <div className="relative w-full h-full flex-1 min-h-0 bg-slate-900 [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent overflow-hidden flex">
       {/* Background Pattern */}
       {renderBackgroundPattern()}
 
@@ -60,7 +60,7 @@ export const Design13: React.FC<NewsDesignProps> = ({
         }} 
       />
       {overlayOpacity !== 0 && (
-        <div className="absolute inset-0 bg-gradient-to-t [.export-video_&]:!bg-transparent from-black/90 via-transparent to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent from-black/90 via-transparent to-transparent z-10 pointer-events-none" />
       )}
 
       {/* Geometric Designs */}

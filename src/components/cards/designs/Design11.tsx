@@ -87,7 +87,7 @@ export const Design11: React.FC<NewsDesignProps> = ({
           
           {/* Image Overlays */}
           {overlayOpacity !== 0 && (
-            <div className="absolute inset-0 bg-gradient-to-t [.export-video_&]:!bg-transparent from-black/80 via-transparent to-black/20 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent from-black/80 via-transparent to-black/20 pointer-events-none" />
           )}
           
           {/* Date Badge */}

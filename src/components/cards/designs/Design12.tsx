@@ -39,7 +39,7 @@ export const Design12: React.FC<NewsDesignProps> = ({
   overlayOpacity
 }) => {
   return (
-    <div className="relative w-full h-full flex-1 min-h-0 bg-black [.export-video_&]:!bg-transparent overflow-hidden flex">
+    <div className="relative w-full h-full flex-1 min-h-0 bg-black [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent overflow-hidden flex">
       {/* Background Pattern */}
       {renderBackgroundPattern()}
 
@@ -53,7 +53,7 @@ export const Design12: React.FC<NewsDesignProps> = ({
 
       {/* Bottom Dark Gradient for text readability */}
       {overlayOpacity !== 0 && (
-        <div className="absolute inset-0 bg-gradient-to-t [.export-video_&]:!bg-transparent from-black/90 via-black/40 to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent from-black/90 via-black/40 to-transparent z-10 pointer-events-none" />
       )}
 
       {/* Left Sidebar */}

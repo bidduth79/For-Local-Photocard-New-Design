@@ -44,7 +44,7 @@ export const Design2: React.FC<NewsDesignProps> = ({
 
   return (
     <>
-      <div className="absolute inset-0 bg-white [.export-video_&]:!bg-transparent z-0">
+      <div className="absolute inset-0 bg-white [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent z-0">
       </div>
 
       <div className="relative z-20 w-full h-full flex-1 min-h-0 flex flex-col pointer-events-none">

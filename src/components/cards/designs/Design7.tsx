@@ -39,7 +39,7 @@ export const Design7: React.FC<NewsDesignProps> = ({
 
   return (
     <>
-      <div className="absolute inset-0 bg-gray-900 [.export-video_&]:!bg-transparent z-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 bg-gray-900 [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent z-0 overflow-hidden pointer-events-none">
          {/* Full Image */}
          <div className="pointer-events-auto w-full h-full">
            {renderImage("w-full h-[150%] object-cover -mt-[25%]")}
@@ -47,7 +47,7 @@ export const Design7: React.FC<NewsDesignProps> = ({
          
          {/* Gradient Overlay (Dark at top, fading down) */}
          {overlayOpacity !== 0 && (
-           <div className="absolute inset-0 bg-gradient-to-b [.export-video_&]:!bg-transparent from-gray-900 via-gray-900/90 to-transparent z-10 pointer-events-none" style={{ height: '70%' }} />
+           <div className="absolute inset-0 bg-gradient-to-b [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent from-gray-900 via-gray-900/90 to-transparent z-10 pointer-events-none" style={{ height: '70%' }} />
          )}
          {showGeometricShapes && (
            <GeometricOverlay color={geometricShapeColor} opacity={geometricShapeOpacity} />

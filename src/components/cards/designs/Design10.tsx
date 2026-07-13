@@ -63,7 +63,7 @@ export const Design10: React.FC<NewsDesignProps> = ({
         {renderImage("w-full h-full object-cover")}
         {overlayOpacity !== 0 && (
           <>
-            <div className="absolute inset-0 bg-gradient-to-b [.export-video_&]:!bg-transparent from-black/40 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-b [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent from-black/40 via-transparent to-transparent pointer-events-none" />
             {/* Gradient overlay for smooth transition */}
             <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#1c1c1c] to-transparent pointer-events-none" />
           </>

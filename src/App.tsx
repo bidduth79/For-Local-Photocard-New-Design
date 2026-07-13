@@ -38,6 +38,7 @@ export default function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isDesktop, setIsDesktop] = useState(typeof window !== 'undefined' ? window.innerWidth >= 1024 : true);
   const [isProcessingVideo, setIsProcessingVideo] = useState(false);
+  const [readyVideoInfo, setReadyVideoInfo] = useState<{url: string, filename: string} | null>(null);
 
   useEffect(() => {
     const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
@@ -130,6 +131,11 @@ export default function App() {
     }
     const result = await downloadImageHook('news', state.photocardRef, state.quoteCardRef, state.selectedDesign, state.language, imageUrl, (state as any).videoResolution);
     setIsProcessingVideo(false);
+    
+    if (result && result.videoUrl) {
+      setReadyVideoInfo({ url: result.videoUrl, filename: result.filename });
+    }
+
     if (result && result.requiresLicense) {
       import('react-hot-toast').then(({ toast }) => {
         toast.error(state.language === 'bn' ? 'আপনার ফ্রি ডাউনলোড লিমিট শেষ হয়ে গেছে!' : 'Your free download limit has been reached!');
@@ -158,6 +164,33 @@ export default function App() {
               ? 'অনুগ্রহ করে অপেক্ষা করুন। ভিডিওটি তৈরি হতে কিছু সময় লাগতে পারে। ডাউনলোড শেষ না হওয়া পর্যন্ত ট্যাব পরিবর্তন বা মিনিমাইজ করবেন না।' 
               : 'Please wait, generating your video. Do not switch tabs or minimize the browser until the download is complete.'}
           </p>
+        </div>
+      )}
+
+      {readyVideoInfo && (
+        <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center text-white px-4">
+          <div className="bg-white text-gray-900 p-8 rounded-2xl max-w-sm w-full text-center shadow-2xl relative">
+            <h2 className="text-2xl font-bold mb-4">{state.language === 'bn' ? 'ভিডিও প্রস্তুত!' : 'Video is Ready!'}</h2>
+            <p className="text-gray-600 mb-6">
+              {state.language === 'bn' ? 'আপনার ভিডিও ডাউনলোডের জন্য প্রস্তুত।' : 'Your video is ready to download.'}
+            </p>
+            <a 
+              href={readyVideoInfo.url} 
+              download={readyVideoInfo.filename}
+              onClick={() => {
+                setTimeout(() => setReadyVideoInfo(null), 500);
+              }}
+              className="block w-full py-3 bg-[#5934e8] hover:bg-[#4b2ac8] text-white rounded-xl font-medium transition-colors mb-3"
+            >
+              {state.language === 'bn' ? 'ডাউনলোড করুন' : 'Download Now'}
+            </a>
+            <button 
+              onClick={() => setReadyVideoInfo(null)}
+              className="mt-4 text-gray-500 hover:text-gray-700 text-sm font-medium transition-colors"
+            >
+              {state.language === 'bn' ? 'বন্ধ করুন' : 'Close'}
+            </button>
+          </div>
         </div>
       )}
       <Toaster position="top-center" toastOptions={{ duration: 3000 }} />

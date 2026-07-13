@@ -49,7 +49,7 @@ export const Design15: React.FC<NewsDesignProps> = ({
       {renderBackgroundPattern()}
 
       {/* Darker diagonal overlay */}
-      <div className="absolute inset-0 bg-black/20 [.export-video_&]:!bg-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-black/20 [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent pointer-events-none" />
       <div 
         className="absolute top-0 right-0 bottom-0 w-[60%] bg-black/10 transform origin-bottom-right -skew-x-12 pointer-events-none"
       />

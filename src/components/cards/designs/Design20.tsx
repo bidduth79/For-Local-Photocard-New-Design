@@ -66,7 +66,7 @@ export const Design20: React.FC<NewsDesignProps> = ({
   }, []);
 
   return (
-    <div className="relative w-full h-full flex-1 min-h-0 overflow-hidden bg-black [.export-video_&]:!bg-transparent">
+    <div className="relative w-full h-full flex-1 min-h-0 overflow-hidden bg-black [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent">
       <svg className="absolute inset-0 w-full h-full z-50 pointer-events-none hide-on-export">
         <rect
           ref={rectRef}
@@ -141,7 +141,7 @@ export const Design20: React.FC<NewsDesignProps> = ({
       
       {/* Gradient Overlay for Text Readability */}
       {overlayOpacity !== 0 && (
-        <div className="absolute inset-0 z-10 bg-gradient-to-t [.export-video_&]:!bg-transparent from-black/90 via-black/40 to-transparent pointer-events-none fg-layer" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-t [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent from-black/90 via-black/40 to-transparent pointer-events-none fg-layer" />
       )}
 
       {/* Logo Overlay */}

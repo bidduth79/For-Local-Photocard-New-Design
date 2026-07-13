@@ -43,6 +43,14 @@ async function startServer() {
 
   app.use(express.json({ limit: '50mb' }));
 
+  // Serve tmp directory for downloaded videos
+  const tmpDir = path.join(process.cwd(), 'public', 'tmp');
+  if (!fs.existsSync(tmpDir)) {
+    fs.mkdirSync(tmpDir, { recursive: true });
+  }
+  app.use('/tmp', express.static(tmpDir));
+
+
   const upload = multer({ dest: path.join(_dirname, 'temp_uploads') });
 
   app.post("/api/render-video", upload.fields([
@@ -124,7 +132,7 @@ async function startServer() {
         const targetW = Math.round((w * scaleFactor) / 2) * 2;
         const targetH = Math.round((h * scaleFactor) / 2) * 2;
         const hflipFilter = flipH === -1 ? ',hflip' : '';
-        filters.push(`color=c=black@0:size=${w}x${h}:d=9999[vbox]`);
+        filters.push(`color=c=black@0:size=${w}x${h}:d=9999,format=yuva420p[vbox]`);
         filters.push(`[1:v]scale=${targetW}:${targetH}:force_original_aspect_ratio=${isContain ? 'decrease' : 'increase'}${hflipFilter}[vscaled]`);
         filters.push(`[vbox][vscaled]overlay=x=(W-w)/2+${offsetX}:y=(H-h)/2+${offsetY}:shortest=1[mainv]`);
         filters.push(`[${lastBase}][mainv]overlay=${x}:${y}[base2]`);

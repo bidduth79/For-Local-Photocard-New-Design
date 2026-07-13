@@ -304,15 +304,11 @@ const Photocard = forwardRef<HTMLDivElement, PhotocardProps>(
                 loop
                 playsInline
                 style={{
-                  width: videoFit === 'contain' ? undefined : '100%',
-                  height: videoFit === 'contain' ? undefined : '100%',
-                  maxWidth: '100%',
-                  maxHeight: '100%',
-                  objectFit: (isVideoDesign && videoFit === 'contain') ? 'contain' : (isFullscreenDesign ? 'cover' : 'contain'),
+                  width: '100%',
+                  height: '100%',
+                  objectFit: videoFit === 'contain' ? 'contain' : (isFullscreenDesign ? 'cover' : 'contain'),
                   objectPosition: videoFit === 'contain' ? '50% 50%' : `calc(50% + ${currentOffsetX}px) calc(50% + ${currentOffsetY}px)`,
-                  transform: videoFit === 'contain' 
-                    ? `translate(${currentOffsetX}px, ${currentOffsetY}px) scaleX(${currentFlipH ? -1 : 1}) scale(${currentScale / 100})`
-                    : `scaleX(${currentFlipH ? -1 : 1}) scale(${currentScale / 100})`,
+                  transform: `scaleX(${currentFlipH ? -1 : 1}) scale(${currentScale / 100})`,
                   filter: currentFilter !== 'none' ? currentFilter : undefined,
                   ...(videoFadeEdges && videoFit === 'contain' ? {
                     maskImage: 'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)',
@@ -815,7 +811,7 @@ const Photocard = forwardRef<HTMLDivElement, PhotocardProps>(
     return (
       <div
         ref={ref}
-        className="bg-white relative overflow-hidden flex flex-col font-sans [.export-video_&]:!bg-transparent"
+        className="bg-white relative overflow-hidden flex flex-col font-sans [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent"
         style={{
           width: dims.width,
           height: dims.height,

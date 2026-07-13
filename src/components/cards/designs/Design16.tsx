@@ -64,7 +64,7 @@ export const Design16: React.FC<NewsDesignProps> = ({
       >
         {renderImage && renderImage("absolute inset-0 w-full h-full")}
         {overlayOpacity !== 0 && (
-          <div className="absolute inset-0 bg-black/30 [.export-video_&]:!bg-transparent" />
+          <div className="absolute inset-0 bg-black/30 [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent" />
         )}
         {/* Subtle overlay pattern for header */}
         <div className="absolute inset-0 opacity-10" 

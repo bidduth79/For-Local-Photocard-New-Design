@@ -51,7 +51,7 @@ export const Design18: React.FC<NewsDesignProps> = ({
   const bgContrastColor = getContrastColor(themeColor);
   
   return (
-    <div className="relative w-full h-full flex-1 min-h-0 overflow-hidden bg-white [.export-video_&]:!bg-transparent">
+    <div className="relative w-full h-full flex-1 min-h-0 overflow-hidden bg-white [.export-video_&]:!bg-transparent [&.export-video]:!bg-transparent">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         {renderImage("w-full h-full object-cover")}
