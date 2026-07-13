@@ -473,9 +473,23 @@ const Photocard = forwardRef<HTMLDivElement, PhotocardProps>(
                 const decodedSvg = decodeURIComponent(pattern.split(',')[1]);
                 // Replace #888 or other default colors with the selected patternColor
                 // We use a simple regex to find stroke="#..." or fill="#..." that aren't "none"
-                const coloredSvg = decodedSvg
+                let coloredSvg = decodedSvg
                   .replace(/stroke="[^"]*"/g, (match) => match.includes('none') ? match : `stroke="${patternColor}"`)
                   .replace(/fill="[^"]*"/g, (match) => match.includes('none') ? match : `fill="${patternColor}"`);
+                
+                const widthMatch = coloredSvg.match(/width="([0-9.]+)"/);
+                const heightMatch = coloredSvg.match(/height="([0-9.]+)"/);
+                if (widthMatch && heightMatch) {
+                  const w = parseFloat(widthMatch[1]);
+                  const h = parseFloat(heightMatch[1]);
+                  const newW = patternScale * 2;
+                  const newH = h * (newW / w);
+                  if (!coloredSvg.includes('viewBox')) {
+                     coloredSvg = coloredSvg.replace('<svg ', `<svg viewBox="0 0 ${w} ${h}" `);
+                  }
+                  coloredSvg = coloredSvg.replace(`width="${widthMatch[1]}"`, `width="${newW}"`);
+                  coloredSvg = coloredSvg.replace(`height="${heightMatch[1]}"`, `height="${newH}"`);
+                }
                 coloredPattern = `data:image/svg+xml,${encodeURIComponent(coloredSvg)}`;
               } catch (e) {
                 console.error("Error coloring SVG pattern", e);
@@ -488,7 +502,7 @@ const Photocard = forwardRef<HTMLDivElement, PhotocardProps>(
                 className={`absolute inset-[-50%] z-0 pointer-events-none ${globalIsVideoDesign ? 'animate-bg-pattern' : ''}`}
                 style={{
                   backgroundImage: `url("${coloredPattern}")`,
-                  backgroundSize: `${patternScale * 2}px ${patternScale * 2}px`,
+                  backgroundSize: 'auto',
                   backgroundRepeat: 'repeat',
                   backgroundPosition: 'center',
                   '--pattern-size': `${patternScale * 2}px`,

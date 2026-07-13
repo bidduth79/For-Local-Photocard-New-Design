@@ -126,7 +126,9 @@ export default function App() {
 
   const downloadImage = async () => {
     const imageUrl = state.image;
-    if (imageUrl?.startsWith('data:video/')) {
+    const isVideoFile = imageUrl?.startsWith('data:video/') || imageUrl?.match(/\.(mp4|webm|mov|ogg)(\?.*)?$/i);
+    const isVideoDesign = state.selectedDesign === 20;
+    if (isVideoFile || isVideoDesign) {
       setIsProcessingVideo(true);
     }
     let result = null;

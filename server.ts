@@ -96,8 +96,9 @@ async function startServer() {
       let lastBase = '0:v'; // start with bgImage
 
       if (patternIdx !== -1) {
-        const P = config.patternSize || 200;
-        filters.push(`[${lastBase}][${patternIdx}:v]overlay=x='-mod(t*${P}/20,${P})':y='-mod(t*${P}/20,${P})'[withpat]`);
+        const PX = config.patternSize || 200;
+        const PY = config.patternH || config.patternSize || 200;
+        filters.push(`[${lastBase}][${patternIdx}:v]overlay=x='-mod(t*${PX}/20,${PX})':y='-mod(t*${PY}/20,${PY})'[withpat]`);
         lastBase = 'withpat';
       }
 

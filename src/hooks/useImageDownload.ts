@@ -121,8 +121,13 @@ export const useImageDownload = () => {
       await Promise.all(images.map(img => {
         if (img.complete) return Promise.resolve();
         return new Promise((resolve) => {
-          img.onload = resolve;
+          const timeout = setTimeout(() => {
+             console.warn('Image load timeout', img.src);
+             resolve(null);
+          }, 3000);
+          img.onload = () => { clearTimeout(timeout); resolve(null); };
           img.onerror = () => {
+            clearTimeout(timeout);
             console.warn('Image failed to load', img.src);
             resolve(null);
           };
@@ -337,28 +342,41 @@ export const useImageDownload = () => {
           const patternEl = ref.current.querySelector('.animate-bg-pattern') as HTMLElement;
           let hasAnimatedPattern = false;
           let patternSize = 200;
+          let patternH = 200;
           if (patternEl && patternEl.style.backgroundImage) {
             const match = patternEl.style.backgroundImage.match(/^url\(['"]?(.*?)['"]?\)$/i);
             if (match && match[1].startsWith('data:image/svg+xml')) {
               const svgDataUrl = match[1];
               const patSize = state.patternScale ? state.patternScale * 2 : 200;
+              let patW = patSize;
+              let patH = patSize;
+              try {
+                const decodedSvg = decodeURIComponent(svgDataUrl.split(',')[1]);
+                const widthMatch = decodedSvg.match(/width="([0-9.]+)"/);
+                const heightMatch = decodedSvg.match(/height="([0-9.]+)"/);
+                if (widthMatch && heightMatch) {
+                   patW = parseFloat(widthMatch[1]);
+                   patH = parseFloat(heightMatch[1]);
+                }
+              } catch (e) {}
+
               const canvas = document.createElement('canvas');
-              canvas.width = targetWidth + patSize;
-              canvas.height = targetHeight + patSize;
+              canvas.width = targetWidth + patW;
+              canvas.height = targetHeight + patH;
               const ctx = canvas.getContext('2d');
               if (ctx) {
                 const img = new Image();
-                img.src = svgDataUrl;
                 await new Promise(resolve => {
                   img.onload = resolve;
                   img.onerror = resolve;
+                  img.src = svgDataUrl;
                 });
                 const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = patSize;
-                tempCanvas.height = patSize;
+                tempCanvas.width = patW;
+                tempCanvas.height = patH;
                 const tempCtx = tempCanvas.getContext('2d');
                 if (tempCtx) {
-                  tempCtx.drawImage(img, 0, 0, patSize, patSize);
+                  tempCtx.drawImage(img, 0, 0, patW, patH);
                   const pat = ctx.createPattern(tempCanvas, 'repeat');
                   if (pat) {
                     ctx.fillStyle = pat;
@@ -367,7 +385,8 @@ export const useImageDownload = () => {
                   if (patBlob) {
                     formData.append('pattern', patBlob, 'pattern.png');
                     hasAnimatedPattern = true;
-                    patternSize = patSize;
+                    patternSize = patW;
+                    patternH = patH;
                   }
                 }
                 }
@@ -386,6 +405,7 @@ export const useImageDownload = () => {
             targetHeight,
             hasAnimatedPattern,
             patternSize,
+            patternH,
             hasAnimatedBorder: state.selectedDesign === 20,
             themeColor: state.themeColor,
             videoDuration: mainVideoEl ? mainVideoEl.duration : 15
