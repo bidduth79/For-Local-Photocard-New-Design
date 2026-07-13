@@ -178,7 +178,7 @@ export const useImageDownload = () => {
     language: 'bn' | 'en',
     imageUrl?: string,
     videoResolution?: '1080p' | '720p'
-  ): Promise<{ success: boolean; requiresLicense?: boolean }> => {
+  ): Promise<{ success: boolean; requiresLicense?: boolean; videoUrl?: string; filename?: string }> => {
     // Check download limit
     const limitStatus = await checkDownloadLimit();
     if (!limitStatus.allowed) {
