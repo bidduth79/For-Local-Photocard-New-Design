@@ -164,17 +164,7 @@ export default function App() {
 
   return (
     <div className={`min-h-screen flex flex-col transition-colors duration-300 ${state.darkMode ? 'bg-slate-900' : 'bg-gray-50'}`}>
-      {isProcessingVideo && (
-        <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center text-white">
-          <div className="w-16 h-16 border-4 border-[#5934e8] border-t-transparent rounded-full animate-spin mb-4"></div>
-          <h2 className="text-xl font-bold mb-2">{state.language === 'bn' ? 'ভিডিও তৈরি হচ্ছে...' : 'Processing Video...'}</h2>
-          <p className="text-gray-300 text-center max-w-md px-4">
-            {state.language === 'bn' 
-              ? 'অনুগ্রহ করে অপেক্ষা করুন। ভিডিওটি তৈরি হতে কিছু সময় লাগতে পারে। ডাউনলোড শেষ না হওয়া পর্যন্ত ট্যাব পরিবর্তন বা মিনিমাইজ করবেন না।' 
-              : 'Please wait, generating your video. Do not switch tabs or minimize the browser until the download is complete.'}
-          </p>
-        </div>
-      )}
+      
 
       {readyVideoInfo && (
         <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center text-white px-4">

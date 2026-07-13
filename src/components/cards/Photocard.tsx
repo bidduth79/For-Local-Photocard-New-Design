@@ -145,8 +145,9 @@ const Photocard = forwardRef<HTMLDivElement, PhotocardProps>(
     const formattedDate = <span style={{ lineHeight: '1.4', paddingBottom: '0.1em', paddingTop: '0.1em', display: 'inline-block' }}>{formattedDateString}</span>;
     const website = customWebsite || "mediacell.news";
     const qrValue = url || (website.startsWith("http") ? website : `https://${website}`);
+    const isVideoDesign = design === 20;
     const globalIsVideo = image && (image.startsWith('data:video/') || image.match(/\.(mp4|webm|mov|ogg)(\?.*)?$/i));
-    const globalIsVideoDesign = globalIsVideo;
+    const globalIsVideoDesign = globalIsVideo || isVideoDesign;
 
     const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
       if (!isEditMode) return;
@@ -499,7 +500,7 @@ const Photocard = forwardRef<HTMLDivElement, PhotocardProps>(
             return (
               <div
                 key={index}
-                className={`absolute inset-[-50%] z-0 pointer-events-none ${globalIsVideoDesign ? 'animate-bg-pattern' : ''}`}
+                className={`absolute inset-[-100%] z-0 pointer-events-none ${globalIsVideoDesign ? 'animate-bg-pattern' : ''}`}
                 style={{
                   backgroundImage: `url("${coloredPattern}")`,
                   backgroundSize: 'auto',

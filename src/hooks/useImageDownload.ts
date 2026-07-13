@@ -195,7 +195,7 @@ export const useImageDownload = () => {
       const isVideo = isVideoFile || selectedDesign === 20;
       
       if (isVideo) {
-        showToast.success(language === 'bn' ? 'ভিডিও তৈরি হচ্ছে, দয়া করে অপেক্ষা করুন...' : 'Generating video, please wait...');
+        // Removed toast as per user request
         const videoSrc = imageUrl ? (imageUrl.startsWith('data:video/blob;') 
           ? imageUrl.replace('data:video/blob;', '') 
           : imageUrl) : '';
@@ -347,7 +347,10 @@ export const useImageDownload = () => {
             const match = patternEl.style.backgroundImage.match(/^url\(['"]?(.*?)['"]?\)$/i);
             if (match && match[1].startsWith('data:image/svg+xml')) {
               const svgDataUrl = match[1];
-              const patSize = state.patternScale ? state.patternScale * 2 : 200;
+              let patSize = state.patternScale ? state.patternScale * 2 : 200;
+              if (videoResolution === '720p') {
+                patSize = Math.round(patSize * (720 / 1080));
+              }
               let patW = patSize;
               let patH = patSize;
               try {
@@ -357,12 +360,16 @@ export const useImageDownload = () => {
                 if (widthMatch && heightMatch) {
                    patW = parseFloat(widthMatch[1]);
                    patH = parseFloat(heightMatch[1]);
+                   if (videoResolution === '720p') {
+                     patW = Math.round(patW * (720 / 1080));
+                     patH = Math.round(patH * (720 / 1080));
+                   }
                 }
               } catch (e) {}
 
               const canvas = document.createElement('canvas');
-              canvas.width = targetWidth * 2 + patW;
-              canvas.height = targetHeight * 2 + patH;
+              canvas.width = targetWidth * 3 + patW;
+              canvas.height = targetHeight * 3 + patH;
               const ctx = canvas.getContext('2d');
               if (ctx) {
                 const img = new Image();
