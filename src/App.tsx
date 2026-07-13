@@ -129,8 +129,15 @@ export default function App() {
     if (imageUrl?.startsWith('data:video/')) {
       setIsProcessingVideo(true);
     }
-    const result = await downloadImageHook('news', state.photocardRef, state.quoteCardRef, state.selectedDesign, state.language, imageUrl, (state as any).videoResolution);
-    setIsProcessingVideo(false);
+    let result = null;
+    try {
+      result = await downloadImageHook('news', state.photocardRef, state.quoteCardRef, state.selectedDesign, state.language, imageUrl, (state as any).videoResolution);
+    } catch (e) {
+      console.error(e);
+      import('react-hot-toast').then(({ toast }) => toast.error('Error generating image/video'));
+    } finally {
+      setIsProcessingVideo(false);
+    }
     
     if (result && result.videoUrl) {
       setReadyVideoInfo({ url: result.videoUrl, filename: result.filename });

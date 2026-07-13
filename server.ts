@@ -41,7 +41,7 @@ async function startServer() {
     validate: { xForwardedForHeader: false, default: true },
   });
 
-  app.use(express.json({ limit: '50mb' }));
+  app.use(express.json({ limit: '500mb' }));
 
   // Serve tmp directory for downloaded videos
   const tmpDir = path.join(process.cwd(), 'public', 'tmp');

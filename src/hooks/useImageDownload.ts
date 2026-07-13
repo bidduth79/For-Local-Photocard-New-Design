@@ -322,8 +322,8 @@ export const useImageDownload = () => {
               const videoResp = await fetch(videoSrc);
               if (videoResp.ok) {
                 const videoBlob = await videoResp.blob();
-                if (videoBlob.size > 30 * 1024 * 1024) {
-                   showToast.error(language === 'bn' ? 'ভিডিও সাইজ অনেক বড়। দয়া করে ৩০ মেগাবাইটের কম সাইজের ভিডিও ব্যবহার করুন।' : 'Video is too large. Please use a video smaller than 30MB.');
+                if (videoBlob.size > 500 * 1024 * 1024) {
+                   showToast.error(language === 'bn' ? 'ভিডিও সাইজ অনেক বড়। দয়া করে ৫০০ মেগাবাইটের কম সাইজের ভিডিও ব্যবহার করুন।' : 'Video is too large. Please use a video smaller than 500MB.');
                    return { success: false };
                 }
                 formData.append('video', videoBlob, 'video.mp4');
@@ -353,16 +353,23 @@ export const useImageDownload = () => {
                   img.onload = resolve;
                   img.onerror = resolve;
                 });
-                const pat = ctx.createPattern(img, 'repeat');
-                if (pat) {
-                  ctx.fillStyle = pat;
-                  ctx.fillRect(0, 0, canvas.width, canvas.height);
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = patSize;
+                tempCanvas.height = patSize;
+                const tempCtx = tempCanvas.getContext('2d');
+                if (tempCtx) {
+                  tempCtx.drawImage(img, 0, 0, patSize, patSize);
+                  const pat = ctx.createPattern(tempCanvas, 'repeat');
+                  if (pat) {
+                    ctx.fillStyle = pat;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
                   const patBlob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'));
                   if (patBlob) {
                     formData.append('pattern', patBlob, 'pattern.png');
                     hasAnimatedPattern = true;
                     patternSize = patSize;
                   }
+                }
                 }
               }
             }
